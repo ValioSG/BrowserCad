@@ -17,8 +17,6 @@
       <button id="cylinder">Create Cylinder</button>
     </div>
     <script>
-    $(function(){
-
         var scene, camera, renderer;
         // var controls, guiControls, datGUI;
         var axis, color;
@@ -27,80 +25,84 @@
         var plane;
         var spotLight;
         var stats;
-        var SCREEN_WIDTH, SCREEN_HEIGHT;
+        var SCREEN_WIDTH = window.innerWidth;
+        var SCREEN_HEIGHT = window.innerHeight;
         var projector;
         var mouse = { x: 0, y: 0 , clicked: false};
         var container = document.getElementById("webglcontainer");
+        var ray;
+        var objects = new Array();
+        /*creates empty scene object and renderer*/
+        scene = new THREE.Scene();
+        camera =  new THREE.PerspectiveCamera(45, SCREEN_WIDTH/SCREEN_HEIGHT, .1, 500);
+        renderer = new THREE.WebGLRenderer({antialias:true});
 
-        function init(){
-            /*creates empty scene object and renderer*/
-            scene = new THREE.Scene();
-            camera =  new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, .1, 500);
-            renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setClearColor(0xdddddd);
+        renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        renderer.shadowMapEnabled= true;
+        renderer.shadowMapSoft = true;
 
-            renderer.setClearColor(0xdddddd);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMapEnabled= true;
-            renderer.shadowMapSoft = true;
+        //Add stats
+        stats = new Stats();
+        stats.domElement.style.position = "absolute";
+        stats.domElement.style.right = "0px";
+        stats.domElement.style.top = "0px";
 
-            //Add stats
-            stats = new Stats();
-            stats.domElement.style.position = "absolute";
-            stats.domElement.style.right = "0px";
-            stats.domElement.style.top = "0px";
+        container.appendChild(stats.domElement);
 
-            container.appendChild(stats.domElement);
+        projector = new THREE.Projector();
 
-            projector = new THREE.Projector();
+        /*add controls*/
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.addEventListener( 'change', render );
 
-            /*add controls*/
-            controls = new THREE.OrbitControls( camera, renderer.domElement );
-            controls.addEventListener( 'change', render );
+        /*adds helpers*/
+        axis =  new THREE.AxisHelper(10);
+        scene.add (axis);
 
-            /*adds helpers*/
-            axis =  new THREE.AxisHelper(10);
-            scene.add (axis);
+        /*create plane*/
+        planeGeometry = new THREE.PlaneGeometry (100,100,100);
+        planeMaterial = new THREE.MeshPhongMaterial({color:0xffffff});
+        plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-            /*create plane*/
-            planeGeometry = new THREE.PlaneGeometry (100,100,100);
-            planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
-            plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        /*position and add objects to scene*/
+        plane.rotation.x = -.5*Math.PI;
+        plane.receiveShadow = true;
+        scene.add(plane);
 
-            /*position and add objects to scene*/
-            plane.rotation.x = -.5*Math.PI;
-            plane.receiveShadow = true;
-            scene.add(plane);
+        camera.position.x = 40;
+        camera.position.y = 40;
+        camera.position.z = 40;
+        camera.lookAt(scene.position);
 
-            camera.position.x = 40;
-            camera.position.y = 40;
-            camera.position.z = 40;
-            camera.lookAt(scene.position);
+        var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
+        vector.unproject(camera);
+        ray = new THREE.Raycaster( camera.position,
+        vector.sub( camera.position ).normalize() );
 
-            /*adds spot light with starting parameters*/
-            spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.castShadow = true;
-            spotLight.position.set (20, 35, 40);
-            spotLight.intensity = 1;
-            spotLight.distance = 0;
-            spotLight.angle = 1.570;
-            spotLight.exponent = 0;
-            spotLight.shadowCameraNear = 10;
-            spotLight.shadowCameraFar = 100;
-            spotLight.shadowCameraFov = 50;
-            spotLight.shadowCameraVisible = false;
-            spotLight.shadowBias = 0;
-            spotLight.shadowDarkness = 0.5;
-            scene.add(spotLight);
+        /*adds spot light with starting parameters*/
+        spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.castShadow = true;
+        spotLight.position.set (20, 35, 40);
+        spotLight.intensity = 1;
+        spotLight.distance = 0;
+        spotLight.angle = 1.570;
+        spotLight.exponent = 0;
+        spotLight.shadowCameraNear = 10;
+        spotLight.shadowCameraFar = 100;
+        spotLight.shadowCameraFov = 50;
+        spotLight.shadowCameraVisible = false;
+        spotLight.shadowBias = 0;
+        spotLight.shadowDarkness = 0.5;
+        scene.add(spotLight);
 
-            $("#webglcontainer").append(renderer.domElement);
-            /*stats*/
-            stats = new Stats();
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.left = '0px';
-            stats.domElement.style.top = '0px';
-            $("#webGL-container").append( stats.domElement );
-
-        }
+        $("#webglcontainer").append(renderer.domElement);
+        /*stats*/
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        $("#webGL-container").append( stats.domElement );
 
         function render() {
 
@@ -111,6 +113,91 @@
             render();
             stats.update();
             renderer.render(scene, camera);
+            updateControls();
+        }
+
+        function updateControls() {
+          var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
+          vector.unproject(camera);
+          ray = new THREE.Raycaster( camera.position,
+          vector.sub( camera.position ).normalize() );
+
+          if (mouse.clicked)  {
+            mouse.clicked = false;
+            // if (gameWON) {
+            //   resetGame();
+            //   gameWON = false;
+            //   mouse.clicked = false;
+            //   return;
+            // }
+            // if ( hits.length > 0 ){
+            //   hits[0].object.material.color.setHex((currentMOVE == RED) ? 0xff0000 : 0x00ff00);
+            //   hits[0].object.claim = currentMOVE;
+            //
+            //   updateWin(currentMOVE);
+            // }
+            // mouse.clicked  = false;
+          }
+          else {
+            // if ( hits.length > 0 ) {
+            //   if (hits[0].object != selected) {
+            //     if(selected && (selected.claim == UNCLAIMED)) {
+            //       selected.material.color.setHex(selected.currentHex);
+            //     }
+            //     selected = hits[0].object;
+            //     if (selected.claim == UNCLAIMED) {
+            //       selected.currentHex = selected.material.color.getHex();
+            //       selected.material.color.setHex(0xffd700);
+            //     }
+            //   }
+            // } else {
+            //   if ((selected) && (selected.claim == UNCLAIMED))
+            //     selected.material.color.setHex(selected.currentHex);
+            //   selected = null;
+            // }
+          }
+        }
+
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+        function onDocumentMouseMove(event) {
+          mouse.x = (event.clientX / SCREEN_WIDTH) * 2 -1;
+          mouse.y = -(event.clientY / SCREEN_HEIGHT) * 2 + 1;
+        }
+
+        function onDocumentMouseDown(event) {
+          ray.setFromCamera(mouse, camera);
+          var intersects = ray.intersectObjects(objects);
+          if(intersects.length > 0) {
+            var clickedObject = scene.getObjectByName(objects[0].name);
+            var oldParams = clickedObject.geometry.parameters;
+            scene.remove(clickedObject);
+
+            var geometryOne = new THREE.CylinderGeometry(oldParams.radiusBottom, oldParams.radiusTop, oldParams.height/2, oldParams.radialSegments);
+            var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+            var cylinderOne = new THREE.Mesh( geometryOne, material );
+            scene.add( cylinderOne );
+            cylinderOne.position.x = cylinderOne.geometry.parameters.height/2;
+            cylinderOne.position.y = 2;
+            cylinderOne.position.z = 0;
+            cylinderOne.rotateZ(Math.PI/2);
+
+            objects.push(cylinderOne);
+
+            var geometryTwo = new THREE.CylinderGeometry(oldParams.radiusBottom/2, oldParams.radiusTop/2, oldParams.height/2, oldParams.radialSegments);
+            var cylinderTwo = new THREE.Mesh( geometryTwo, material );
+            scene.add( cylinderTwo );
+            cylinderTwo.position.x = cylinderOne.geometry.parameters.height + cylinderTwo.geometry.parameters.height/2;
+            cylinderTwo.position.y = 2;
+            cylinderTwo.position.z = 0;
+            cylinderTwo.rotateZ(Math.PI/2);
+
+            objects.push(cylinderTwo);
+          }
+          mouse.x = ( event.clientX / SCREEN_WIDTH ) * 2 - 1;
+          mouse.y = - ( event.clientY / SCREEN_HEIGHT ) * 2 + 1;
+          mouse.clicked = true;
         }
 
         $(window).resize(function(){
@@ -124,26 +211,24 @@
 
             renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
-
-
         });
-        init();
         animate();
 
         $("#cylinder").click(function(){
-          var geometry = new THREE.CylinderGeometry(2, 2, 5, 8);
+          var geometry = new THREE.CylinderGeometry(2, 2, 5, 32);
           var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
           var cylinder = new THREE.Mesh( geometry, material );
+          cylinder.name = 'workpiece';
           scene.add( cylinder );
-          cylinder.position.x = 0;
+          cylinder.position.x = 2.5;
           cylinder.position.y = 2;
           cylinder.position.z = 0;
 
           // cylinder.rotation.x = 180;
           cylinder.rotateZ(Math.PI/2);
-        });
 
-    });
+          objects.push(cylinder);
+        });
     </script>
   </body>
 </html>
