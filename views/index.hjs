@@ -14,11 +14,31 @@
   <body>
     <div id="webglcontainer"></div>
     <span id="interface">
-      <button id="cylinder">Create Cylinder</button>
-    </div>
+      <span class="button" id="cylinder">Create Cylinder</button></span>
+      <div class="modal-bg">
+        <div id="modal">
+        	<span>Cylinder parameters< a href="#close" id="close">&#215;</a></span>
+        	<form>
+        		<input id="botRad" name="bottomRad" type="textbox" placeholder="Bottom Radius" required>
+        		<input id="topRad" name="topRad" type="textbox" placeholder="Top Radius" required>
+            <input id="height" name="height" type="textbox" placeholder="Cylinder Height" required>
+        		<button name="submitGeoParams" id="submit" type="submit">Create</button>
+        	</form>
+        </div>
+      </div>
+      <div class="operationModal-bg">
+      <div id="operationModal">
+        <span>Operation parameters<a href="#close" id="opClose">&#215;</a></span>
+        <form>
+          <input id="feedLength" name="feedLength" type="textbox" placeholder="Feed length" required>
+          <input id="depth" name="depth" type="textbox" placeholder="Depth of cut" required>
+          <button name="submitOperationParams" id="submit" type="submit">Perform Operation</button>
+        </form>
+      </div>
+      </div>
+    </span>
     <script>
         var scene, camera, renderer;
-        // var controls, guiControls, datGUI;
         var axis, color;
         var planeGeometry;
         var planeMaterial;
@@ -112,8 +132,8 @@
             requestAnimationFrame(animate);
             render();
             stats.update();
-            renderer.render(scene, camera);
             updateControls();
+            renderer.render(scene, camera);
         }
 
         function updateControls() {
@@ -124,37 +144,12 @@
 
           if (mouse.clicked)  {
             mouse.clicked = false;
-            // if (gameWON) {
-            //   resetGame();
-            //   gameWON = false;
-            //   mouse.clicked = false;
-            //   return;
-            // }
-            // if ( hits.length > 0 ){
-            //   hits[0].object.material.color.setHex((currentMOVE == RED) ? 0xff0000 : 0x00ff00);
-            //   hits[0].object.claim = currentMOVE;
-            //
-            //   updateWin(currentMOVE);
-            // }
-            // mouse.clicked  = false;
-          }
-          else {
-            // if ( hits.length > 0 ) {
-            //   if (hits[0].object != selected) {
-            //     if(selected && (selected.claim == UNCLAIMED)) {
-            //       selected.material.color.setHex(selected.currentHex);
-            //     }
-            //     selected = hits[0].object;
-            //     if (selected.claim == UNCLAIMED) {
-            //       selected.currentHex = selected.material.color.getHex();
-            //       selected.material.color.setHex(0xffd700);
-            //     }
-            //   }
-            // } else {
-            //   if ((selected) && (selected.claim == UNCLAIMED))
-            //     selected.material.color.setHex(selected.currentHex);
-            //   selected = null;
-            // }
+            ray.setFromCamera(mouse, camera);
+            var intersects = ray.intersectObjects(objects);
+            if(intersects.length > 0) {
+              $('#operationModal').css('display','block');
+        		  $('.operationModal-bg').fadeIn();
+            }
           }
         }
 
@@ -167,42 +162,51 @@
         }
 
         function onDocumentMouseDown(event) {
-          ray.setFromCamera(mouse, camera);
-          var intersects = ray.intersectObjects(objects);
-          if(intersects.length > 0) {
-            var clickedObject = scene.getObjectByName(objects[0].name);
-            var oldParams = clickedObject.geometry.parameters;
-            scene.remove(clickedObject);
-
-            var geometryOne = new THREE.CylinderGeometry(oldParams.radiusBottom, oldParams.radiusTop, oldParams.height/2, oldParams.radialSegments);
-            var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
-            var cylinderOne = new THREE.Mesh( geometryOne, material );
-            scene.add( cylinderOne );
-            cylinderOne.position.x = cylinderOne.geometry.parameters.height/2;
-            cylinderOne.position.y = 2;
-            cylinderOne.position.z = 0;
-            cylinderOne.rotateZ(Math.PI/2);
-
-            objects.push(cylinderOne);
-
-            var geometryTwo = new THREE.CylinderGeometry(oldParams.radiusBottom/2, oldParams.radiusTop/2, oldParams.height/2, oldParams.radialSegments);
-            var cylinderTwo = new THREE.Mesh( geometryTwo, material );
-            scene.add( cylinderTwo );
-            cylinderTwo.position.x = cylinderOne.geometry.parameters.height + cylinderTwo.geometry.parameters.height/2;
-            cylinderTwo.position.y = 2;
-            cylinderTwo.position.z = 0;
-            cylinderTwo.rotateZ(Math.PI/2);
-
-            objects.push(cylinderTwo);
-          }
           mouse.x = ( event.clientX / SCREEN_WIDTH ) * 2 - 1;
           mouse.y = - ( event.clientY / SCREEN_HEIGHT ) * 2 + 1;
           mouse.clicked = true;
         }
 
+        function performOperation(deapthOfCut, feedLength){
+          var clickedObject = scene.getObjectByName(objects[0].name);
+          var oldParams = clickedObject.geometry.parameters;
+          scene.remove(clickedObject);
+
+          var cylinderOne = createNewGeometry(parseInt(oldParams.radiusBottom), parseInt(oldParams.radiusTop), oldParams.height - feedLength, 'geoOne');
+
+          // var geometryOne = new THREE.CylinderGeometry(parseInt(oldParams.radiusBottom), parseInt(oldParams.radiusTop), 5, parseInt(oldParams.radialSegments));
+          // var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+          // var cylinderOne = new THREE.Mesh( geometryOne, material );
+          // scene.add( cylinderOne );
+          // cylinderOne.position.x = cylinderOne.geometry.parameters.height/2;
+          // cylinderOne.position.y = cylinderOne.geometry.radiusBottom;
+          // cylinderOne.position.z = cylinderOne.geometry.radiusBottom;
+          // cylinderOne.rotateZ(Math.PI/2);
+
+          var cylinderTwo = createNewGeometry(parseInt(oldParams.radiusBottom - deapthOfCut), parseInt(oldParams.radiusTop - deapthOfCut), feedLength, 'geoTwo');
+
+          // var geometryTwo = new THREE.CylinderGeometry(oldParams.radiusBottom - depth, oldParams.radiusTop - depth, 10, oldParams.radialSegments);
+          // var cylinderTwo = new THREE.Mesh( geometryTwo, material );
+          // scene.add( cylinderTwo );
+          scene.add(cylinderOne);
+          scene.add(cylinderTwo);
+
+          cylinderTwo.position.x = cylinderOne.geometry.parameters.height + cylinderTwo.geometry.parameters.height/2;
+          cylinderTwo.position.y = parseInt(oldParams.radiusBottom);
+          cylinderTwo.position.z = parseInt(oldParams.radiusBottom);
+          // cylinderTwo.rotateZ(Math.PI/2);
+
+
+          var indexOne = objects.indexOf(cylinderOne);
+          objects.splice(indexOne, 1);
+
+          var indexTwo = objects.indexOf(cylinderTwo);
+          objects.splice(indexTwo, 1);
+
+          return false;
+        }
+
         $(window).resize(function(){
-
-
             SCREEN_WIDTH = window.innerWidth;
             SCREEN_HEIGHT = window.innerHeight;
 
@@ -214,21 +218,61 @@
         });
         animate();
 
-        $("#cylinder").click(function(){
-          var geometry = new THREE.CylinderGeometry(2, 2, 5, 32);
+        $('button[name="submitOperationParams"]').click(function(e){
+          e.preventDefault();
+          var deapthOfCut = $('#depth').val();
+          var feedLength = $('#feedLength').val();
+          performOperation(deapthOfCut, feedLength);
+          $('.operationModal-bg').fadeOut();
+          $('#operationModal').fadeOut();
+          return false;
+        });
+
+        $('button[name="submitGeoParams"]').click(function(e){
+          e.preventDefault();
+
+          var bottomValue = $('#botRad').val();
+          var topValue = $('#topRad').val();
+          var height = $('#height').val();
+
+          var cylinder = createNewGeometry(bottomValue, topValue, height, 'workpiece');
+          scene.add( cylinder );
+          $('.modal-bg').fadeOut();
+          $('#modal').fadeOut();
+          return false;
+        });
+
+        function createNewGeometry(radiusBottom, radiusTop, height, name) {
+          var geometry = new THREE.CylinderGeometry(radiusBottom, radiusTop, height, 32);
           var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
           var cylinder = new THREE.Mesh( geometry, material );
-          cylinder.name = 'workpiece';
-          scene.add( cylinder );
-          cylinder.position.x = 2.5;
-          cylinder.position.y = 2;
-          cylinder.position.z = 0;
+          cylinder.name = name;
 
-          // cylinder.rotation.x = 180;
+          cylinder.position.x = height/2;
+          cylinder.position.y = radiusBottom;
+          cylinder.position.z = radiusBottom;
           cylinder.rotateZ(Math.PI/2);
 
           objects.push(cylinder);
-        });
+          return cylinder;
+        }
+
+        $('.button').click(function(){
+      		  $('#modal').css('display','block');
+      		  $('.modal-bg').fadeIn();
+      	});
+
+    		$('#close').click(function(){
+    			  $('.modal-bg').fadeOut();
+    			  $('#modal').fadeOut();
+    		  return false;
+    		});
+
+        $('#opClose').click(function(){
+          $('.operationModal-bg').fadeOut();
+          $('#operationModal').fadeOut();
+    		  return false;
+    		});
     </script>
   </body>
 </html>
