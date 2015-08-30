@@ -99,7 +99,7 @@ button:hover{
 #forgot-link:hover{
 	color: #23AA84;
 }
-#modal, #operationModal{
+#modal, #operationModal {
   display:none;
 	position:absolute;
 	background-color:#F5F5F6;
@@ -115,19 +115,39 @@ button:hover{
 	box-shadow:0 0 10px 0 rgba(0,0,0,0.3);
 }
 
-#modal span, #operationModal span {
+#modal span, #operationModal span, .codeOutput span {
 	display: block;
 	background:#5DC3A7;
 	padding: 10px;
 	color:#fff;
 	border-radius:3px;
 }
-#close, #opClose{
+#close, #opClose, #codeClose{
 	float: right;
 	color: #fff;
 	font-family: serif;
 	font-size: 15px;
 }
-#close:hover, #opClose:hover{
+#close:hover, #opClose:hover, #codeClose:hover{
 	color: #000;
+}
+
+.codeOutput {
+  display:none;
+	position:absolute;
+	background-color:#F5F5F6;
+	right:10px;
+	bottom:10px;
+	z-index:101;
+	border-radius:3px;
+	min-width: 20%;
+	height:auto;
+	margin-top:-130px;
+	margin-left:-170px;
+	border-bottom: 3px solid #5DC3A7;
+	box-shadow:0 0 10px 0 rgba(0,0,0,0.3);
+}
+
+#code {
+  padding: 10px;
 }

@@ -17,7 +17,7 @@
       <span class="button" id="cylinder">Create Cylinder</button></span>
       <div class="modal-bg">
         <div id="modal">
-        	<span>Cylinder parameters< a href="#close" id="close">&#215;</a></span>
+        	<span>Cylinder parameters<a href="#close" id="close">&#215;</a></span>
         	<form>
         		<input id="botRad" name="bottomRad" type="textbox" placeholder="Bottom Radius" required>
         		<input id="topRad" name="topRad" type="textbox" placeholder="Top Radius" required>
@@ -35,6 +35,10 @@
           <button name="submitOperationParams" id="submit" type="submit">Perform Operation</button>
         </form>
       </div>
+      </div>
+      <div class="codeOutput">
+        <span>Machine code<a href="#close" id="codeClose">&#215;</a></span>
+        <p id="code"></p>
       </div>
     </span>
     <script>
@@ -174,34 +178,37 @@
 
           var cylinderOne = createNewGeometry(parseInt(oldParams.radiusBottom), parseInt(oldParams.radiusTop), oldParams.height - feedLength, 'geoOne');
 
-          // var geometryOne = new THREE.CylinderGeometry(parseInt(oldParams.radiusBottom), parseInt(oldParams.radiusTop), 5, parseInt(oldParams.radialSegments));
-          // var material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
-          // var cylinderOne = new THREE.Mesh( geometryOne, material );
-          // scene.add( cylinderOne );
-          // cylinderOne.position.x = cylinderOne.geometry.parameters.height/2;
-          // cylinderOne.position.y = cylinderOne.geometry.radiusBottom;
-          // cylinderOne.position.z = cylinderOne.geometry.radiusBottom;
-          // cylinderOne.rotateZ(Math.PI/2);
-
           var cylinderTwo = createNewGeometry(parseInt(oldParams.radiusBottom - deapthOfCut), parseInt(oldParams.radiusTop - deapthOfCut), feedLength, 'geoTwo');
-
-          // var geometryTwo = new THREE.CylinderGeometry(oldParams.radiusBottom - depth, oldParams.radiusTop - depth, 10, oldParams.radialSegments);
-          // var cylinderTwo = new THREE.Mesh( geometryTwo, material );
-          // scene.add( cylinderTwo );
           scene.add(cylinderOne);
           scene.add(cylinderTwo);
 
           cylinderTwo.position.x = cylinderOne.geometry.parameters.height + cylinderTwo.geometry.parameters.height/2;
           cylinderTwo.position.y = parseInt(oldParams.radiusBottom);
           cylinderTwo.position.z = parseInt(oldParams.radiusBottom);
-          // cylinderTwo.rotateZ(Math.PI/2);
-
 
           var indexOne = objects.indexOf(cylinderOne);
           objects.splice(indexOne, 1);
 
           var indexTwo = objects.indexOf(cylinderTwo);
           objects.splice(indexTwo, 1);
+
+          $('.codeOutput').css('display','block');
+          $('#code').html('O0001 <br/> \
+N5 M12 <br/> \
+N10 T0101 <br/> \
+N15 G0 X100 Z50 <br/> \
+N20 M3 S600 <br/> \
+N25 M8 <br/> \
+N30 G1 X50 Z0 F600 <br/> \
+N40 W-30 F200 <br/> \
+N50 X80 W-20 F150 <br/> \
+N60 G0 X100 Z50 <br/> \
+N70 T0100 <br/> \
+N80 M5 <br/> \
+N90 M9 <br/> \
+N100 M13 <br/> \
+N110 M30 <br/> \
+N120 %');
 
           return false;
         }
@@ -271,6 +278,11 @@
         $('#opClose').click(function(){
           $('.operationModal-bg').fadeOut();
           $('#operationModal').fadeOut();
+    		  return false;
+    		});
+
+        $('#codeClose').click(function(){
+          $('.codeOutput').fadeOut();
     		  return false;
     		});
     </script>
