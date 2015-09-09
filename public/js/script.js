@@ -155,8 +155,20 @@ $(function(){
     var indexTwo = objects.indexOf(cylinderTwo);
     objects.splice(indexTwo, 1);
 
-    $('.codeOutput').css('display','block');
-    $('#code').html('O0001 <br/> \
+    var outputString = [];
+
+    outputString.push('00001');
+    $.fn.write = function(str, delay){
+            var len = str.length, i = 0, self = this;
+
+            var interval = setInterval(function(){
+                if(!str[i]) {clearInterval(interval)}
+                else {self.html(str.substr(0, i++));}
+            }, delay || 30)
+            return self;
+        }
+
+    $('#code').write('O0001 <br/> \
   N5 M12 <br/> \
   N10 T0101 <br/> \
   N15 G0 X100 Z50 <br/> \

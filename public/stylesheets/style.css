@@ -136,7 +136,7 @@ button:hover{
 }
 
 .codeOutput {
-  display:none;
+  display:block;
 	position:fixed;
 	background-color:#F5F5F6;
 	right:10px;
