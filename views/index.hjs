@@ -13,34 +13,17 @@
     <script src="/js/script.js"></script>
   </head>
   <body>
+    <!--Container for webGL-->
     <div id="webglcontainer"></div>
+    <!--Overlay for the interface-->
     <div id="interface">
       <button class="button" autofocus id="cylinder">Create Cylinder</button>
-      <div class="modal-bg">
-        <div id="modal">
-        	<span>Cylinder parameters<a href="#close" id="close">&#215;</a></span>
-        	<form>
-        		<input id="botRad" name="bottomRad" type="textbox" placeholder="Bottom Radius" required>
-        		<input id="topRad" name="topRad" type="textbox" placeholder="Top Radius" required>
-            <input id="height" name="height" type="textbox" placeholder="Cylinder Height" required>
-        		<button name="submitGeoParams" id="submit" type="submit">Create</button>
-        	</form>
-        </div>
-      </div>
-      <div class="operationModal-bg">
-      <div id="operationModal">
-        <span>Operation parameters<a href="#close" id="opClose">&#215;</a></span>
-        <form>
-          <input id="feedLength" name="feedLength" type="textbox" placeholder="Feed length" required>
-          <input id="depth" name="depth" type="textbox" placeholder="Depth of cut" required>
-          <button name="submitOperationParams" id="submit" type="submit">Perform Operation</button>
-        </form>
-      </div>
-      </div>
-      <div class="codeOutput">
-        <span>Machine code<a href="#close" id="codeClose">&#215;</a></span>
-        <p id="code">Code output</p>
-      </div>
+      <!--Interface-->
+      {{> codeOutput}}
+
+      <!--Modals-->
+      {{> geometryModal}}
+      {{> operationModal}}
     </div>
   </body>
 </html>

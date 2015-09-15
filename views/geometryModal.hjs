@@ -1,0 +1,11 @@
+<div class="modal-bg">
+    <div id="modal">
+        <span>Cylinder parameters<a href="#close" id="close">&#215;</a></span>
+        <form>
+            <input id="botRad" name="bottomRad" type="textbox" placeholder="Bottom Radius" required>
+            <input id="topRad" name="topRad" type="textbox" placeholder="Top Radius" required>
+            <input id="height" name="height" type="textbox" placeholder="Cylinder Height" required>
+            <button name="submitGeoParams" id="submit" type="submit">Create</button>
+        </form>
+    </div>
+</div>

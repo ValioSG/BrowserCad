@@ -1,0 +1,10 @@
+<div class="operationModal-bg">
+    <div id="operationModal">
+        <span>Operation parameters<a href="#close" id="opClose">&#215;</a></span>
+        <form>
+            <input id="feedLength" name="feedLength" type="textbox" placeholder="Feed length" required>
+            <input id="depth" name="depth" type="textbox" placeholder="Depth of cut" required>
+            <button name="submitOperationParams" id="submit" type="submit">Perform Operation</button>
+        </form>
+    </div>
+</div>
