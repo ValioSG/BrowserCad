@@ -1,0 +1,9 @@
+<div class="interfaceVisible" id="latheInfo">
+    <span>Lathe info<a href="#close" id="latheClose">&#215;</a></span>
+    <h2>Sample Lathe X</h2>
+    <ul>
+      <li>Property 1</li>
+      <li>Property 2</li>
+      <li>Property 3</li>
+    </ul>
+</div>

@@ -20,6 +20,7 @@
       <button class="button" autofocus id="cylinder">Create Cylinder</button>
       <!--Interface-->
       {{> codeOutput}}
+      {{> latheInfo}}
 
       <!--Modals-->
       {{> geometryModal}}

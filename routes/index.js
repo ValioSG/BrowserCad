@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
       partials: {
           codeOutput: 'codeOutput',
           operationModal: 'operationModal',
-          geometryModal: 'geometryModal'
+          geometryModal: 'geometryModal',
+          latheInfo: 'latheInfo'
       }
   });
 });

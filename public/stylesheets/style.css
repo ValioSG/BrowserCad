@@ -70,8 +70,8 @@ input:focus{
 	border:2px solid #5DC3A7;
   outline:0;
 }
-input{
-	width:240px;
+input, select{
+	width:225px;
 	padding:7px;
 	border:2px solid #ccc ;
 	border-radius:3px;
@@ -118,37 +118,49 @@ button:hover{
 	box-shadow:0 0 10px 0 rgba(0,0,0,0.3);
 }
 
-#modal span, #operationModal span, .codeOutput span {
+#modal span, #operationModal span, .interfaceVisible span {
 	display: block;
 	background:#5DC3A7;
 	padding: 10px;
 	color:#fff;
 	border-radius:3px;
 }
-#close, #opClose, #codeClose{
+#close, #opClose, #codeClose, #latheClose{
 	float: right;
 	color: #fff;
 	font-family: serif;
 	font-size: 15px;
 }
-#close:hover, #opClose:hover, #codeClose:hover{
+#close:hover, #opClose:hover, #codeClose:hover, #latheClose{
 	color: #000;
 }
 
-.codeOutput {
+.interfaceVisible {
   display:block;
 	position:fixed;
 	background-color:#F5F5F6;
-	right:10px;
-	bottom:10px;
 	z-index:101;
 	border-radius:3px;
 	min-width: 20%;
 	height:auto;
-	margin-top:-130px;
-	margin-left:-170px;
 	border-bottom: 3px solid #5DC3A7;
 	box-shadow:0 0 10px 0 rgba(0,0,0,0.3);
+}
+
+#codeOutput {
+  bottom: 10px;
+  right: 10px;
+}
+
+#latheInfo {
+  height: 40%;
+  width: 400px;
+  bottom: 10px;
+  left: 10px;
+}
+
+#latheInfo ul, #latheInfo h2 {
+  margin-left: 20px;
 }
 
 #code {

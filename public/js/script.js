@@ -267,7 +267,13 @@ $(function(){
   // })
 
   $('#codeClose').click(function(){
-    $('.codeOutput').fadeOut();
+    $('.interfaceVisible').fadeOut();
+    doc.trigger('closeModal');
+    return false;
+  });
+
+  $('#latheClose').click(function(){
+    $('.interfaceVisible').fadeOut();
     doc.trigger('closeModal');
     return false;
   });

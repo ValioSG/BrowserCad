@@ -4,6 +4,14 @@
         <form>
             <input id="feedLength" name="feedLength" type="textbox" placeholder="Feed length" required>
             <input id="depth" name="depth" type="textbox" placeholder="Depth of cut" required>
+            <p>
+              Tool select:
+            </p>
+            <select class="tool" name="toolSelect">
+              <option value="tool1">Tool 1</option>
+              <option value="tool2">Tool 2</option>
+              <option value="tool3">Tool 3</option>
+            </select>
             <button name="submitOperationParams" id="submit" type="submit">Perform Operation</button>
         </form>
     </div>
