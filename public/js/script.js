@@ -53,9 +53,9 @@ $(function(){
   plane.receiveShadow = true;
   scene.add(plane);
 
-  camera.position.x = 40;
-  camera.position.y = 40;
-  camera.position.z = 40;
+  camera.position.x = 50;
+  camera.position.y = 50;
+  camera.position.z = 50;
   camera.lookAt(scene.position);
 
   var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
@@ -135,7 +135,17 @@ $(function(){
   }
 
   function performOperation(deapthOfCut, feedLength){
-    var clickedObject = scene.getObjectByName(objects[0].name);
+    var clickedObject;
+    if(objects.length > 2){
+      if(parseInt(feedLength) > parseInt(objects[objects.length - 1].geometry.parameters.height)) {
+        clickedObject = objects[objects.length - 2];
+      } else {
+        clickedObject = objects[objects.length - 1];
+      }
+    } else {
+      clickedObject = objects[0];
+    }
+
     var oldParams = clickedObject.geometry.parameters;
     scene.remove(clickedObject);
 
@@ -145,15 +155,19 @@ $(function(){
     scene.add(cylinderOne);
     scene.add(cylinderTwo);
 
-    cylinderTwo.position.x = cylinderOne.geometry.parameters.height + cylinderTwo.geometry.parameters.height/2;
-    cylinderTwo.position.y = parseInt(oldParams.radiusBottom);
-    cylinderTwo.position.z = parseInt(oldParams.radiusBottom);
+    cylinderOne.position.x = parseFloat(clickedObject.position.x) - parseFloat(cylinderOne.geometry.parameters.height/2);
+    cylinderOne.position.y = parseFloat(clickedObject.position.y);
+    cylinderOne.position.z = parseFloat(clickedObject.position.z);
+
+    cylinderTwo.position.x = parseFloat(cylinderOne.position.x) + parseFloat(cylinderTwo.geometry.parameters.height);
+    cylinderTwo.position.y = parseInt(cylinderOne.position.y);
+    cylinderTwo.position.z = parseInt(cylinderOne.position.z);
 
     var indexOne = objects.indexOf(cylinderOne);
-    objects.splice(indexOne, 1);
+    // objects.splice(indexOne, 1);
 
     var indexTwo = objects.indexOf(cylinderTwo);
-    objects.splice(indexTwo, 1);
+    // objects.splice(indexTwo, 1);
 
     var outputString = [];
 
