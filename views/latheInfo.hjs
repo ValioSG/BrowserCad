@@ -1,9 +1,19 @@
 <div class="interfaceVisible" id="latheInfo">
     <span>Lathe info<a href="#close" id="latheClose">&#215;</a></span>
-    <h2>Sample Lathe X</h2>
+    <h2>{{ lathe.0.model }}</h2>
+    <p>Spindle</p>
     <ul>
-      <li>Property 1</li>
-      <li>Property 2</li>
-      <li>Property 3</li>
+      <li>Nose: {{lathe.0.spindle.nose}}</li>
+      <li>Taper: {{lathe.0.spindle.taper}}</li>
+      <li>Max Torque: {{lathe.0.spindle.taper}}</li>
     </ul>
+    <p>Max Feed Rate: {{lathe.0.maxFeedRate}} [m/min]</p>
+    <p>Main Drive Power: {{lathe.0.mainDrive}} [kW]</p>
+    <p>Speed Ranges</p>
+    <ul>
+        <li>I -> {{lathe.0.speedRanges.first}}</li>
+        <li>II -> {{lathe.0.speedRanges.second}}</li>
+    </ul>
+    <p>Max Work Diameter: {{lathe.0.maxWorkDiameter}} [mm]</p>
+    <p>Max Work Length: {{lathe.0.maxWorkLength}} [mm]</p>
 </div>

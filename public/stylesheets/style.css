@@ -153,13 +153,13 @@ button:hover{
 }
 
 #latheInfo {
-  height: 40%;
   width: 400px;
   bottom: 10px;
   left: 10px;
+  height:auto;
 }
 
-#latheInfo ul, #latheInfo h2 {
+#latheInfo ul, #latheInfo h2, #latheInfo p{
   margin-left: 20px;
 }
 
