@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        title #{title}
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src='/js/three/three.min.js')
+        script(src='/js/dat.gui.min.js')
+        script(src='/js/OrbitControls.js')
+        script(src='/js/Projector.js')
+        script(src='/js/stats.min.js')
+        script(src='/js/jquery-2.1.4.min.js')
+        script(src='/js/helvetiker_regular.typeface.js')
+        script(src='/js/script.js')
+    body
+        div#webglcontainer
+        div#interface
+            button#cylinder.button.createButton Create Cylinder
+            button#clear.button.clearButton Clear
+            include codeOutput.jade
+            include geometryModal.jade
+            include latheInfo.jade
+            include operationModal.jade

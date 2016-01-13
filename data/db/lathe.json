@@ -1,16 +1,16 @@
 {
-  "model" : "LCC800",
-  "spindle" : {
-    "nose" : "DIN55027",
-    "taper" : "M160",
-    "maxTorque" : 5000
+  "model": "LCC800",
+  "spindle": {
+    "nose": "DIN55027",
+    "taper": "M160",
+    "maxTorque": 5000
   },
-  "maxFeedRate" : 10,
-  "mainDrive" : 30,
-  "speedRanges" : {
-    "first" : "2-180",
-    "second" : "8-1000"
+  "maxFeedRate": 10,
+  "mainDrive": 30,
+  "speedRanges": {
+    "first": "2-180",
+    "second": "8-1000"
   },
-  "maxWorkDiameter" : 410,
-  "maxWorkLength" : 1500
+  "maxWorkDiameter": 410,
+  "maxWorkLength": 1500
 }

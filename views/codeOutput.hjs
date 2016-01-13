@@ -1,4 +1,0 @@
-<div class="interfaceVisible" id="codeOutput">
-    <span>Machine code<a href="#close" id="codeClose">&#215;</a></span>
-    <p id="code">Code output</p>
-</div>

@@ -1,0 +1,13 @@
+div.operationModal-bg
+    div#operationModal
+        span Operation parameters
+            a#opClose(href='#close') &#215;
+        form
+            input#feedLength(name='feedLength', type='textbox', placeholder='Feed length')
+            input#depth(name='depth', type='textbox', placeholder='Depth of cut')
+            p Tool select:
+            select.tool(name='toolSelect')
+                option(value='tool1') Tool 1
+                option(value='tool2') Tool 2
+                option(value='tool3') Tool 3
+            button#submit(name='submitOperationParams', type='submit') Perform Operation

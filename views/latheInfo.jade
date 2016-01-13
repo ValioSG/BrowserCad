@@ -1,0 +1,19 @@
+div#latheInfo.interfaceVisible
+    span Lathe info
+        a#latheClose(href='#close') &#215;
+    h2=lathe[0].model
+
+    p Spindle
+    ul
+        li Nose: #{lathe[0].spindle.nose}
+        li Taper: #{lathe[0].spindle.taper}
+        li Max Torque: #{lathe[0].spindle.torque}
+
+    p Max Feed Rate: #{lathe[0].maxFeedRate} [m/min]
+    p Main Drive Power: #{lathe[0].mainDrive} [kW]
+    p Speed Ranges
+    ul
+        li I -> #{lathe[0].speedRanges.first}
+        li II -> #{lathe[0].speedRanges.second}
+    p Max Work DiameterL #{lathe[0].maxWorkDiameter} [mm]
+    p Max Work Length #{lathe[0].maxWorkLength} [mm]
