@@ -193,3 +193,11 @@ button:hover {
 #code {
     padding: 10px;
 }
+
+#sendPost {
+    position: relative;
+    bottom: 5px;
+    right: 5px;
+    margin: 0;
+    display: none;
+}

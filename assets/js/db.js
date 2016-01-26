@@ -37,11 +37,8 @@ var materialSchema = mongoose.Schema({
     }
 });
 
-var Material = mongoose.model('Material', materialSchema);
-
-Material.find().lean().exec({}, function (err, materials) {
-    Material.allMats = materials;
-});
+var toolSchema = mongoose.Schema();
 
 exports.Lathe = mongoose.model('Lathe', latheSchema);
-exports.Material = Material;
+exports.Material = mongoose.model('Material', materialSchema);
+exports.Tool = mongoose.model('Tool', toolSchema);

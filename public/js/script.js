@@ -15,8 +15,6 @@ $(function () {
     var container = $("#webglcontainer");
     var ray;
     var objects = new Array();
-    var Material = require('db.js').Material;
-    var materials = Material.allMats;
 
     /*creates empty scene object and renderer*/
     scene = new THREE.Scene();
@@ -107,6 +105,11 @@ $(function () {
             if (intersects.length > 0) {
                 OrbitControlMouseUp();
                 // controls.noRotate = true;
+                selectTool(intersects[0].object).done(function(tool) {
+                    var key = Object.keys(tool);
+                    var val = tool[key].name;
+                    $('select.tool').append('<option value="' + key + '">' + val + '</option>');
+                });
                 $('#operationModal').css('display', 'block');
                 $('.operationModal-bg').fadeIn().find('input');
                 doc.trigger('openModal');
@@ -127,6 +130,35 @@ $(function () {
         mouse.y = -( event.clientY / SCREEN_HEIGHT ) * 2 + 1;
         mouse.clicked = true;
         // controls.noRotate = false;
+    }
+
+    function selectTool(clickedObject){
+        var tool = [];
+        var material = clickedObject.materialName;
+        var dfd = $.Deferred();
+        $.ajax({
+            url: '/tools',
+            dataType: 'json',
+            type: 'GET',
+            success: function(data) {
+                for (var key in data) {
+                    if (!data.hasOwnProperty(key)) continue;
+
+                    var obj = data[key];
+                    for (var prop in obj) {
+                        if(!obj.hasOwnProperty(prop)) continue;
+
+                        if(prop === material){
+                            tool[prop] = obj[prop];
+                        }
+                    }
+                }
+                //tool = data[0][material];
+                dfd.resolve(tool);
+            }
+        });
+
+        return dfd.promise();
     }
 
     function performOperation(depthOfCut, feedLength) {
@@ -197,6 +229,7 @@ $(function () {
         //};
 
         $('#code').html(outputString);
+        $('#sendPost').show();
 
         return false;
     }
@@ -231,23 +264,35 @@ $(function () {
         var topValue = $('#topRad').val();
         var height = $('#height').val();
 
+        var materialsResult;
         var color;
-        switch ($('#material').val()) {
-            case 'brass': color = materials[0].brass.hexColor; break;
-            case 'c45': color = materials[0].c45.hexColor; break;
-            case 'stainless': color = materials[0].stainless.hexColor; break;
+        $.ajax({
+            url: '/materials',
+            dataType: 'json',
+            type: 'GET',
+            success: function(data) {
+                materialsResult = data;
+                var mat = $('#material').val();
+                switch (mat) {
+                    case 'brass': color = materialsResult[0].brass.hexColor; break;
+                    case 'c45': color = materialsResult[0].c45.hexColor; break;
+                    case 'stainless': color = materialsResult[0].stainless.hexColor; break;
 
-        }
+                    default: color = 'ffffff'; break;
+                }
 
-        var cylinder = createNewGeometry(bottomValue, topValue, height, color);
-        scene.add(cylinder);
-        $('.modal-bg').fadeOut();
-        $('#modal').fadeOut();
-        doc.trigger('closeModal');
-        return false;
+                var cylinder = createNewGeometry(bottomValue, topValue, height, color, mat);
+                scene.add(cylinder);
+
+                $('.modal-bg').fadeOut();
+                $('#modal').fadeOut();
+                doc.trigger('closeModal');
+                return false;
+            }
+        });
     });
 
-    function createNewGeometry(radiusBottom, radiusTop, height, color) {
+    function createNewGeometry(radiusBottom, radiusTop, height, color, mat) {
         var geometry = new THREE.CylinderGeometry(radiusBottom, radiusTop, height, 32);
         var material = new THREE.MeshLambertMaterial({color: color});
         var cylinder = new THREE.Mesh(geometry, material);
@@ -256,6 +301,8 @@ $(function () {
         cylinder.position.y = radiusBottom;
         cylinder.position.z = radiusBottom;
         cylinder.rotateZ(Math.PI / 2);
+
+        cylinder.materialName = mat;
 
         objects.push(cylinder);
         return cylinder;
@@ -273,6 +320,7 @@ $(function () {
         });
         objects.length = 0;
         $('#code').html('Code output');
+        $('#sendPost').hide();
         return false;
     });
 

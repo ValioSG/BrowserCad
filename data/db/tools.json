@@ -1,0 +1,11 @@
+[{
+  "brass" : {
+    "name" : "Brass Tool"
+  },
+  "c45" : {
+    "name" : "C45 Tool"
+  },
+  "stainless" : {
+    "name" : "Stainless steel tool"
+  }
+}]
