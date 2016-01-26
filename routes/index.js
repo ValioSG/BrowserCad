@@ -45,4 +45,9 @@ router.route('/tools')
         });
     });
 
+router.route('/receiveCode')
+    .post(function(req, res) {
+        res.json(JSON.stringify(req.body.machineCode));
+    });
+
 module.exports = router;

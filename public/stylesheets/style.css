@@ -61,8 +61,8 @@ a {
 }
 
 .clearButton {
-    top: 10px;
-    right: 10px;
+    top: 80px;
+    left: 10px;
     background: #DA244F;
     border-bottom: 3px solid #B5002A;
 }
@@ -151,14 +151,14 @@ button:hover {
     border-radius: 3px;
 }
 
-#close, #opClose, #codeClose, #latheClose {
+#close, #opClose, #codeClose, #latheClose, #handlePostClose{
     float: right;
     color: #fff;
     font-family: serif;
     font-size: 15px;
 }
 
-#close:hover, #opClose:hover, #codeClose:hover, #latheClose {
+#close:hover, #opClose:hover, #codeClose:hover, #latheClose:hover, #handlePostClose:hover {
     color: #000;
 }
 
@@ -200,4 +200,11 @@ button:hover {
     right: 5px;
     margin: 0;
     display: none;
+}
+
+#handlePost {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }

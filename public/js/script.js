@@ -321,7 +321,24 @@ $(function () {
         objects.length = 0;
         $('#code').html('Code output');
         $('#sendPost').hide();
+        $('#handlePostCode').html('');
+        $('#handlePost').hide();
         return false;
+    });
+
+    $('#sendPost').click(function () {
+        $.ajax({
+            url: '/receiveCode',
+            dataType: 'json',
+            type: 'post',
+            data: {
+                "machineCode" : $('#code').html()
+            },
+            complete : function(data) {
+                $('#handlePost').show();
+                $('#handlePostCode').html(data.responseText);
+            }
+        });
     });
 
     $('#close').click(function () {
@@ -343,6 +360,13 @@ $(function () {
         doc.trigger('closeModal');
         return false;
     });
+
+    $('#handlePostClose').click(function () {
+        $('.interfaceVisible').fadeOut();
+        doc.trigger('closeModal');
+        return false;
+    });
+
 
     $('#latheClose').click(function () {
         $('.interfaceVisible').fadeOut();
