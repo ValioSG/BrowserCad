@@ -2,12 +2,12 @@ div.modal-bg
     div#modal
         span Cylinder parameters
             a#close(href='#close') &#215;
-        form
-            input#botRad(name='bottomRad', type='textbox', placeholder='Bottom Radius')
-            input#topRad(name='topRad', type='textbox', placeholder='Top Radius')
-            input#height(name='height', type='textbox', placeholder='Cylinder Height')
+        form#geometryForm
+            input#botRad(name='bottomRad', type='textbox', placeholder='Bottom Radius', data-validation="number", data-validation-allowing="range[1;10]")
+            input#topRad(name='topRad', type='textbox', placeholder='Top Radius', data-validation="number", data-validation-allowing="range[1;10]")
+            input#height(name='height', type='textbox', placeholder='Cylinder Height', data-validation="number", data-validation-allowing="range[1;20]")
             select#material(name='material')
                 option(value='brass') Brass
                 option(value='c45') Steel C45
                 option(value='stainless') Stainless steel
-            button#submit(name='submitGeoParams', type='submit') Create
+            input#submit(name='submitGeoParams', type='submit')

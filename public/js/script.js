@@ -257,38 +257,41 @@ $(function () {
         return false;
     });
 
-    $('button[name="submitGeoParams"]').click(function (e) {
-        e.preventDefault();
+    $('input[name="submitGeoParams"]').click(function (e) {
+        $.validate({
+            onSuccess : function () {
+                var bottomValue = $('#botRad').val();
+                var topValue = $('#topRad').val();
+                var height = $('#height').val();
 
-        var bottomValue = $('#botRad').val();
-        var topValue = $('#topRad').val();
-        var height = $('#height').val();
+                var materialsResult;
+                var color;
+                $.ajax({
+                    url: '/materials',
+                    dataType: 'json',
+                    type: 'GET',
+                    success: function(data) {
+                        materialsResult = data;
+                        var mat = $('#material').val();
+                        switch (mat) {
+                            case 'brass': color = materialsResult[0].brass.hexColor; break;
+                            case 'c45': color = materialsResult[0].c45.hexColor; break;
+                            case 'stainless': color = materialsResult[0].stainless.hexColor; break;
 
-        var materialsResult;
-        var color;
-        $.ajax({
-            url: '/materials',
-            dataType: 'json',
-            type: 'GET',
-            success: function(data) {
-                materialsResult = data;
-                var mat = $('#material').val();
-                switch (mat) {
-                    case 'brass': color = materialsResult[0].brass.hexColor; break;
-                    case 'c45': color = materialsResult[0].c45.hexColor; break;
-                    case 'stainless': color = materialsResult[0].stainless.hexColor; break;
+                            default: color = 'ffffff'; break;
+                        }
 
-                    default: color = 'ffffff'; break;
-                }
+                        var cylinder = createNewGeometry(bottomValue, topValue, height, color, mat);
+                        scene.add(cylinder);
 
-                var cylinder = createNewGeometry(bottomValue, topValue, height, color, mat);
-                scene.add(cylinder);
-
-                $('.modal-bg').fadeOut();
-                $('#modal').fadeOut();
-                doc.trigger('closeModal');
+                        $('.modal-bg').fadeOut();
+                        $('#modal').fadeOut();
+                        doc.trigger('closeModal');
+                    }
+                });
                 return false;
-            }
+            },
+            form : '#geometryForm'
         });
     });
 
